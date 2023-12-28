@@ -15,7 +15,7 @@
 
 #check for updates
 try{
-    $url = "https://raw.githubusercontent.com/ChrisTitusTech/powershell-profile/main/Microsoft.PowerShell_profile.ps1"
+    $url = "https://raw.githubusercontent.com/markuskiller/powershell-profile/main/Microsoft.PowerShell_profile.ps1"
     $oldhash = Get-FileHash $PROFILE
     Invoke-RestMethod $url -OutFile "$env:temp/Microsoft.PowerShell_profile.ps1"
     $newhash = Get-FileHash "$env:temp/Microsoft.PowerShell_profile.ps1"
@@ -28,8 +28,21 @@ try{
 catch {
     Write-Error "unable to check for `$profile updates"
 }
-Remove-Variable @("newhash", "oldhash", "url")
-Remove-Item  "$env:temp/Microsoft.PowerShell_profile.ps1"
+
+try {
+    Remove-Variable @("newhash", "oldhash", "url")
+}
+catch {
+    Write-Error "unable to remove temporary variables for updates"
+}
+
+try {
+    Remove-Item  "$env:temp/Microsoft.PowerShell_profile.ps1"
+}
+catch {
+    Write-Error "unable to remove temporary profile for updates"
+}
+
 
 # Import Terminal Icons
 Import-Module -Name Terminal-Icons
